@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Telegram Recorder</string>
+    <string name="title_activity_launcher">Launcher</string>
+    <string name="test">Test</string>
+    <string name="enable">Enable</string>
+    <string name="recording_format">Recording format</string>
+    <string name="save_path">Save path</string>
+    <string name="date_date_when_recording_is_made_caller_id_caller_id">Available: %date, %caller_id</string>
+    <string name="file_name_mask">File name mask</string>
+    <string name="where_you_want_to_save_recordings">Where you want to save recordings</string>
+</resources>
