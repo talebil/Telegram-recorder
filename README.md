@@ -18,3 +18,9 @@ Call recorder for Android based on Xposed
 2. Activate it in the Xposed Manager
 3. Configure recordings save path
 4. That's all :)
+
+
+
+### Project Dependencies
+1. LSPosed for Android - [https://github.com/LSPosed/LSPosed] (license: GPL)
+2. Mobile-FFMPEG - [https://github.com/tanersener/mobile-ffmpeg] (license: LGPL)
