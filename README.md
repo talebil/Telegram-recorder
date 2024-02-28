@@ -21,6 +21,6 @@ Call recorder for Android based on Xposed
 
 
 
-### Project Dependencies
+## Dependencies
 1. LSPosed for Android - [https://github.com/LSPosed/LSPosed] (license: GPL)
 2. Mobile-FFMPEG - [https://github.com/tanersener/mobile-ffmpeg] (license: LGPL)
