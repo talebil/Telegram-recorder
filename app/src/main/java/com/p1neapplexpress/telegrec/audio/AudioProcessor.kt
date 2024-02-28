@@ -8,9 +8,9 @@ import java.io.File
 class AudioProcessor {
 
     fun mergeAndConvert(first: File, second: File, result: File, onComplete: () -> Unit, onError: (throwable: Throwable) -> Unit) {
+        val filterComplex = "-filter_complex \"[0][1]amerge=inputs=2,pan=stereo|FL<c0+c1|FR<c2+c3[a]\" -map \"[a]\""
         val ffmpegCommand =
-            "-i ${first.absolutePath} -i ${second.absolutePath} -filter_complex \"[0][1]amerge=inputs=2,pan=stereo|FL<c0+c1|FR<c2+c3[a]\" -map \"[a]\" ${result.absolutePath}"
-
+            "-i ${first.absolutePath} -i ${second.absolutePath} $filterComplex ${result.absolutePath}"
         FFmpeg.executeAsync(ffmpegCommand) { _, p1 ->
             when (p1) {
                 RETURN_CODE_SUCCESS -> onComplete.invoke()

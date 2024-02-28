@@ -91,7 +91,7 @@ dependencies {
     implementation("io.insert-koin:koin-android:3.6.0-wasm-alpha2")
 
     // Mobile FFmpeg
-    implementation(files("libs/mobile-ffmpeg-release.aar"))
+    implementation(files("libs/mobile-ffmpeg.aar"))
 
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
