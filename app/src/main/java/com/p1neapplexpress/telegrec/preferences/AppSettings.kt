@@ -60,7 +60,7 @@ class AppSettings(private val prefs: SharedPreferences) : SharedPreferences.OnSh
         private const val FILE_NAME_MASK_KEY = "file_name_mask"
         private const val SAVE_PATH_KEY = "save_path"
 
-        private const val SAVE_PATH_DEFAULT = "/storage/emulated/0/"
-        private const val FILE_NAME_MASK_DEFAULT = "Recording_%caller_id_%date"
+        private const val SAVE_PATH_DEFAULT = "/storage/emulated/0/Recordings"
+        private const val FILE_NAME_MASK_DEFAULT = "Recording_%date"
     }
 }
