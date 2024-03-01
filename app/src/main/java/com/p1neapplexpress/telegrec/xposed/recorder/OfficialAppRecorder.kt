@@ -5,10 +5,9 @@ import com.p1neapplexpress.telegrec.util.doAfterAll
 import com.p1neapplexpress.telegrec.util.logd
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-class OfficialAppRecorder(param: XC_LoadPackage.LoadPackageParam) : AbstractRecorder(
-    listOf(OFFICIAL_CLIENT, OFFICIAL_CLIENT_WEB), param
-) {
+open class OfficialAppRecorder(param: XC_LoadPackage.LoadPackageParam) : AbstractRecorder(param) {
 
+    override val packageNames: List<String> = listOf(OFFICIAL_CLIENT, OFFICIAL_CLIENT_WEB)
     private val classLoader: ClassLoader = param.classLoader
 
     override fun hook() {

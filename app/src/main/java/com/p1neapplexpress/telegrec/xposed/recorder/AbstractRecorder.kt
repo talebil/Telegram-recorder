@@ -16,10 +16,9 @@ import com.p1neapplexpress.telegrec.xposed.getTemporaryFile
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import java.io.File
 
-abstract class AbstractRecorder(
-    private val packageName: List<String>,
-    private val param: XC_LoadPackage.LoadPackageParam
-) {
+abstract class AbstractRecorder(private val param: XC_LoadPackage.LoadPackageParam) {
+
+    abstract val packageNames: List<String>
     open var callerID: String? = null
 
     private var appSettings: AppSettings? = null
@@ -28,7 +27,7 @@ abstract class AbstractRecorder(
     private var threads: List<AudioCaptureThread>? = null
 
     fun run() {
-        if (packageName.contains(param.packageName)) {
+        if (packageNames.contains(param.packageName)) {
             getXPref()?.let {
                 appSettings = AppSettings(it)
             }
