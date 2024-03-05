@@ -3,7 +3,7 @@ Call recorder for Android based on Xposed
 
 ## Supported clients
 - Official Telegram app (org.telegram.messenger)
-- Plus (org.telegram.plus)
+- Plus Messenger (org.telegram.plus)
 
 ## Supported audio formats
 - MPEG-1 Audio Layer 3
