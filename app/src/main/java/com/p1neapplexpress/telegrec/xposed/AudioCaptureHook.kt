@@ -13,7 +13,6 @@ class AudioCaptureHook(param: XC_LoadPackage.LoadPackageParam) {
 
     fun hookAudioCapture() {
         AUDIO_RECORDER_CLASS.asClass(classLoader)?.doAfterAll(READ) { methodHook ->
-            logd("capture running")
             if (methodHook.args.size == 3) onNewRecordData?.invoke(methodHook.args[0] as ByteBuffer)
         }
 
