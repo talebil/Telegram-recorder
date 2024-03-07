@@ -46,12 +46,11 @@ fun MainScreenView(
             options = RecordingFormat.entries.map { it.name }
         )
         Spacer(modifier = Modifier.height(8.dp))
-        EditTextSetting(
+        GetDirectoryTreeSetting(
             enabled = enabledState,
             title = stringResource(R.string.save_path),
             savedValue = savePathState,
             onValueChanged = { mainViewModel.updateSavePath(it) },
-            dialogTitle = stringResource(R.string.where_you_want_to_save_recordings)
         )
         Spacer(modifier = Modifier.height(8.dp))
         EditTextSetting(

@@ -1,5 +1,9 @@
 package com.p1neapplexpress.telegrec.ui.compose
 
+import android.net.Uri
+import android.provider.DocumentsContract
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -27,11 +31,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.p1neapplexpress.telegrec.ui.theme.DarkGray2
+import com.p1neapplexpress.telegrec.util.UriHelper.getPath
+
 
 @Composable
 fun SwitchSetting(
@@ -194,6 +201,47 @@ fun EditTextSetting(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun GetDirectoryTreeSetting(
+    enabled: Boolean,
+    title: String,
+    savedValue: String,
+    onValueChanged: (String) -> Unit
+) {
+    val context = LocalContext.current
+    val inDarkTheme = isSystemInDarkTheme()
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        if (uri == null) return@rememberLauncherForActivityResult
+
+        val docUri = DocumentsContract.buildDocumentUriUsingTree(
+            uri,
+            DocumentsContract.getTreeDocumentId(uri)
+        )
+        val path: String = getPath(context, docUri)
+
+        onValueChanged.invoke(path)
+    }
+
+    Card(
+        modifier = Modifier
+            .height(IntrinsicSize.Min)
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth(),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(if (inDarkTheme) DarkGray2 else Color.White)
+                .clickable { if (enabled) launcher.launch(Uri.parse(savedValue)) }
+                .alpha(if (enabled) 1f else 0.7f)
+                .padding(16.dp),
+        ) {
+            Text(text = title, fontSize = 16.sp)
+            Text(modifier = Modifier.alpha(0.8f), text = savedValue, fontSize = 14.sp)
         }
     }
 }
