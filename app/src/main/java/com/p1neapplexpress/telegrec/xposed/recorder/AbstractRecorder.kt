@@ -5,13 +5,13 @@ import com.p1neapplexpress.telegrec.audio.AudioChannel
 import com.p1neapplexpress.telegrec.audio.AudioProcessor
 import com.p1neapplexpress.telegrec.data.RecordingFormat
 import com.p1neapplexpress.telegrec.preferences.AppSettings
-import com.p1neapplexpress.telegrec.su.CP
-import com.p1neapplexpress.telegrec.su.MakeDirectories
 import com.p1neapplexpress.telegrec.util.formatFileName
 import com.p1neapplexpress.telegrec.util.loge
 import com.p1neapplexpress.telegrec.util.postDelayed
 import com.p1neapplexpress.telegrec.xposed.AudioCaptureHook
+import com.p1neapplexpress.telegrec.xposed.RecordingSaverHook
 import com.p1neapplexpress.telegrec.xposed.XposedTelegramRecorder.Companion.getXPref
+import com.p1neapplexpress.telegrec.xposed.getResultFileDir
 import com.p1neapplexpress.telegrec.xposed.getTemporaryFile
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import java.io.File
@@ -23,8 +23,11 @@ abstract class AbstractRecorder(private val param: XC_LoadPackage.LoadPackagePar
 
     private var appSettings: AppSettings? = null
     private val audioProcessor = AudioProcessor()
-    private val hook = AudioCaptureHook(param)
+    private val captureHook = AudioCaptureHook(param)
+    private val recordingSaverHook = RecordingSaverHook(param)
     private var threads: List<AudioCaptureThread>? = null
+
+    abstract fun hook()
 
     fun run() {
         if (packageNames.contains(param.packageName)) {
@@ -32,7 +35,8 @@ abstract class AbstractRecorder(private val param: XC_LoadPackage.LoadPackagePar
                 appSettings = AppSettings(it)
             }
 
-            hook.hookAudioCapture()
+            captureHook.hookAudioCapture()
+            recordingSaverHook.hookRecordingSaverBinder()
             hook()
         }
     }
@@ -45,8 +49,8 @@ abstract class AbstractRecorder(private val param: XC_LoadPackage.LoadPackagePar
 
         threads!!.map { it.start() }
 
-        hook.onNewRecordData = { threads!![0].bufferStack.push(it) }
-        hook.onNewTrackData = { threads!![1].bufferStack.push(it) }
+        captureHook.onNewRecordData = { threads!![0].bufferStack.push(it) }
+        captureHook.onNewTrackData = { threads!![1].bufferStack.push(it) }
     }
 
     fun endCapture() {
@@ -81,13 +85,13 @@ abstract class AbstractRecorder(private val param: XC_LoadPackage.LoadPackagePar
     private fun processingComplete(result: File, recordingFormat: RecordingFormat) {
         val formatString = ".${recordingFormat.name.lowercase()}"
         val fileName = formatFileName(appSettings!!.fileNameMask, callerID) + formatString
+        val resultFileDir = getResultFileDir(param.packageName)
+        val destFile = File(resultFileDir, fileName)
 
-        var savePath = appSettings!!.savePath
-        if (!savePath.endsWith("/")) savePath += "/"
+        resultFileDir.mkdirs()
+        result.copyTo(destFile)
+        result.delete()
 
-        MakeDirectories(savePath).exec()
-        CP(result.absolutePath, "$savePath$fileName").execAsync()
+        recordingSaverHook.save(destFile)
     }
-
-    abstract fun hook()
 }

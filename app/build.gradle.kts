@@ -7,6 +7,10 @@ android {
     namespace = "com.p1neapplexpress.telegrec"
     compileSdk = 34
 
+    buildFeatures {
+        aidl = true
+    }
+
     defaultConfig {
         applicationId = "com.p1neapplexpress.telegrec"
         minSdk = 25

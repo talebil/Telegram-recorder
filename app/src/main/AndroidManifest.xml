@@ -24,6 +24,16 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".service.RecordingSaverService"
+            android:exported="true"
+            tools:ignore="ExportedService">
+
+            <intent-filter>
+                <action android:name="com.android.vending.billing.InAppBillingService.BIND" />
+            </intent-filter>
+        </service>
+
         <meta-data
             android:name="xposedmodule"
             android:value="true" />
