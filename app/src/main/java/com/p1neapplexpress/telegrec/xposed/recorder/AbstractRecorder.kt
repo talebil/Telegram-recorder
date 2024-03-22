@@ -49,8 +49,8 @@ abstract class AbstractRecorder(private val param: XC_LoadPackage.LoadPackagePar
 
         threads!!.map { it.start() }
 
-        captureHook.onNewRecordData = { threads!![0].bufferStack.push(it) }
-        captureHook.onNewTrackData = { threads!![1].bufferStack.push(it) }
+        captureHook.onNewRecordData = { data -> threads?.let { it[0].bufferStack.push(data) } }
+        captureHook.onNewTrackData = { data -> threads?.let { it[1].bufferStack.push(data) } }
     }
 
     fun endCapture() {

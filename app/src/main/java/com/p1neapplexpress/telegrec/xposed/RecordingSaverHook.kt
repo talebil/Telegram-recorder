@@ -39,8 +39,7 @@ class RecordingSaverHook(param: XC_LoadPackage.LoadPackageParam) {
                 setClassName("com.p1neapplexpress.telegrec", "com.p1neapplexpress.telegrec.service.RecordingSaverService")
             }
 
-            val bound = ctx.bindService(intent, getConnection(), Context.BIND_AUTO_CREATE)
-            logd("service bound = $bound")
+            ctx.bindService(intent, getConnection(), Context.BIND_AUTO_CREATE)
         }
     }
 
