@@ -9,8 +9,10 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 
+private const val DB_NAME = "RECORDINGS_DATABASE"
+
 fun provideDatabase(context: Context) = Room
-    .databaseBuilder(context, RecordingsDatabase::class.java, "RECORDINGS_DATABASE")
+    .databaseBuilder(context, RecordingsDatabase::class.java, DB_NAME)
     .fallbackToDestructiveMigration()
     .build()
 

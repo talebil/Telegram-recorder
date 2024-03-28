@@ -6,4 +6,8 @@ data class PlaybackState(
     val recording: Recording?,
     val currentPosition: Long,
     val duration: Long
-)
+) {
+    companion object {
+        val EMPTY = PlaybackState(null, 0, 0)
+    }
+}

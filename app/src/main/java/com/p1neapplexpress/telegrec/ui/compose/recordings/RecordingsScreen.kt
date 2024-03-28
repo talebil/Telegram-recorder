@@ -31,6 +31,7 @@ fun RecordingsScreenView(
 ) {
 
     val recordingsState by recordingsViewModel.recordingsState.collectAsState()
+    val playbackState by recordingsViewModel.playbackState.collectAsState()
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(title = { Text(text = title) })

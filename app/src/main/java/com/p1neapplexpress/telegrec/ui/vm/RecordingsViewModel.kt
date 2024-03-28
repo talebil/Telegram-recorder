@@ -22,7 +22,7 @@ class RecordingsViewModel : ViewModel(), KoinComponent, PlaybackStateUpdatedList
     private val _recordingsState = MutableStateFlow(listOf<Recording>())
     val recordingsState = _recordingsState.asStateFlow()
 
-    private val _playbackState = MutableStateFlow(PlaybackState(null, 0, 0))
+    private val _playbackState = MutableStateFlow(PlaybackState.EMPTY)
     val playbackState = _playbackState.asStateFlow()
 
     private var currentRecording: Recording? = null

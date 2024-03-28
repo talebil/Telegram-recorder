@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun AudioWaveView(
-    samples: Pair<ShortArray,ShortArray>
+    samples: ShortArray
 ) {
     Row(
         modifier = Modifier
@@ -28,22 +28,14 @@ fun AudioWaveView(
             val width = size.width
             val height = size.height
 
-            val xStep = width / (samples.first.size - 1).toFloat()
+            val xStep = width / (samples.size - 1).toFloat()
             val yScale = height / Short.MAX_VALUE.toFloat()
 
             waveformPath.moveTo(0f, height / 2f)
-
-            samples.first.forEachIndexed { index, sample ->
+    
+            samples.forEachIndexed { index, sample ->
                 val x = index * xStep
-                val y = (sample * yScale) + (height / 2f)
-                waveformPath.lineTo(x, y)
-            }
-
-            waveformPath.moveTo(0f, height / 2f)
-
-            samples.second.forEachIndexed { index, sample ->
-                val x = index * xStep
-                val y = (sample * yScale) + (height / 2f)
+                val y = ((sample * 4) * yScale) + (height / 2f)
                 waveformPath.lineTo(x, y)
             }
 

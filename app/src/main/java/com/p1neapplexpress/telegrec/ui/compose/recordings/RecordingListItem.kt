@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.p1neapplexpress.telegrec.audio.player.PlaybackState
 import com.p1neapplexpress.telegrec.data.Recording
 import com.p1neapplexpress.telegrec.ui.theme.DarkGray2
 import com.p1neapplexpress.telegrec.util.PrettyDate
@@ -26,6 +27,7 @@ import com.p1neapplexpress.telegrec.util.PrettyDate
 @Composable
 fun RecordingListItem(
     recording: Recording,
+    playbackState: PlaybackState? = null,
     onClick: (recording: Recording) -> Unit
 ) {
     val inDarkTheme = isSystemInDarkTheme()
@@ -36,7 +38,6 @@ fun RecordingListItem(
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth()
                 .clickable { onClick.invoke(recording) }
-//            .alpha(if (enabled) 1f else 0.7f),
         ) {
             Column(
                 modifier = Modifier
@@ -54,7 +55,8 @@ fun RecordingListItem(
                     Text(text = PrettyDate.from(recording.date, pattern = PrettyDate.SPACE_PATTERN))
                 }
                 Text(
-                    text = "From: ${recording.app}",
+                    text = "From: ${recording.app} " +
+                            if (playbackState != null && playbackState.recording == recording) "${playbackState.currentPosition}/${playbackState.duration}" else "",
                     modifier = Modifier.alpha(0.7f),
                     maxLines = 1
                 )

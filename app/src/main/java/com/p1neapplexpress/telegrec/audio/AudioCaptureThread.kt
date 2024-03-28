@@ -8,18 +8,16 @@ import java.util.Stack
 class AudioCaptureThread(val dst: File) : Thread(), Runnable {
 
     val bufferStack = Stack<ByteBuffer>()
-    private var waveFile: Wave? = null
+    private var waveFile = Wave(dst)
 
     init {
         File(dst.parent!!).mkdirs()
         dst.createNewFile()
-
-        waveFile = Wave(dst)
-        waveFile!!.writeHeader()
     }
 
-
     override fun run() {
+        waveFile.writeHeader()
+
         while (!interrupted()) {
             if (bufferStack.empty()) continue
 
@@ -32,6 +30,6 @@ class AudioCaptureThread(val dst: File) : Thread(), Runnable {
             dst.appendBytes(data)
         }
 
-        waveFile!!.updateHeader()
+        waveFile.updateHeader()
     }
 }

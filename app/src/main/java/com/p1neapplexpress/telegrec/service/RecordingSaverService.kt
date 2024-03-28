@@ -32,12 +32,11 @@ class RecordingSaverService : Service(), KoinComponent {
 
         override fun saveRecording(rec: Recording?) {
             scope.launch {
-                val recording = rec ?: return@launch
-                recordingsRepository.saveRecording(
-                    rec.copy(
-                        file = File(appSettings.savePath, recording.filename).absolutePath
+                with(rec ?: return@launch) {
+                    recordingsRepository.saveRecording(
+                        copy(file = File(appSettings.savePath, filename).absolutePath)
                     )
-                )
+                }
             }
         }
 

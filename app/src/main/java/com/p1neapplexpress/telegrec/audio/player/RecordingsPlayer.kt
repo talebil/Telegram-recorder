@@ -5,7 +5,7 @@ import android.media.MediaPlayer.OnPreparedListener
 import android.os.Handler
 import com.p1neapplexpress.telegrec.data.Recording
 
-class RecordingsPlayer(private val mediaPlayer: MediaPlayer) : OnPreparedListener {
+class RecordingsPlayer(private val mediaPlayer: MediaPlayer) : OnPreparedListener, MediaPlayer.OnCompletionListener {
     private var listener: PlaybackStateUpdatedListener? = null
     private var currentRecording: Recording? = null
     private val handler = Handler()
@@ -53,10 +53,12 @@ class RecordingsPlayer(private val mediaPlayer: MediaPlayer) : OnPreparedListene
     }
 
     fun play(recording: Recording) {
-        if (mediaPlayer.isPlaying) stop()
+        stop()
+
         mediaPlayer.setDataSource(recording.file)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener(this)
+        mediaPlayer.setOnCompletionListener(this)
         handler.post(updatePositionRunnable)
         currentRecording = recording
     }
@@ -65,11 +67,18 @@ class RecordingsPlayer(private val mediaPlayer: MediaPlayer) : OnPreparedListene
         mediaPlayer.stop()
         mediaPlayer.reset()
         mediaPlayer.setOnPreparedListener(null)
+        mediaPlayer.setOnCompletionListener(null)
         handler.removeCallbacks(updatePositionRunnable)
         currentRecording = null
+
+        listener?.onUpdate(PlaybackState.EMPTY)
     }
 
     override fun onPrepared(p0: MediaPlayer?) {
         p0?.start()
+    }
+
+    override fun onCompletion(p0: MediaPlayer?) {
+        stop()
     }
 }
