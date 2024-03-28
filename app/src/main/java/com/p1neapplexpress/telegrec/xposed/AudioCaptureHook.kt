@@ -2,7 +2,6 @@ package com.p1neapplexpress.telegrec.xposed
 
 import com.p1neapplexpress.telegrec.util.asClass
 import com.p1neapplexpress.telegrec.util.doAfterAll
-import com.p1neapplexpress.telegrec.util.logd
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import java.nio.ByteBuffer
 

@@ -89,12 +89,14 @@ abstract class AbstractRecorder(private val param: XC_LoadPackage.LoadPackagePar
         result.copyTo(destFile)
         result.delete()
 
-        recordingSaverHook.save(Recording(
-            app = param.packageName,
-            callerID = callerID ?: "null",
-            file = destFile.absolutePath,
-            filename = destFile.name,
-            date = currentDate
-        ))
+        recordingSaverHook.save(
+            Recording(
+                app = param.packageName,
+                callerID = callerID ?: "null",
+                file = destFile.absolutePath,
+                filename = destFile.name,
+                date = currentDate
+            )
+        )
     }
 }

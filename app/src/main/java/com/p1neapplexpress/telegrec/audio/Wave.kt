@@ -1,7 +1,5 @@
 package com.p1neapplexpress.telegrec.audio
 
-import java.io.DataInputStream
-import java.io.EOFException
 import java.io.File
 import java.io.FileInputStream
 import java.io.RandomAccessFile
@@ -107,9 +105,9 @@ class Wave(private val file: File) {
         data[43] = (contentSize shr 24 and 0xff).toByte()
     }
 
-    fun waveform(): Pair<ShortArray,ShortArray> {
+    fun waveform(): Pair<ShortArray, ShortArray> {
 
-        fun downsample(samples: ShortArray): Pair<ShortArray,ShortArray> {
+        fun downsample(samples: ShortArray): Pair<ShortArray, ShortArray> {
             val downsampledSamplesMin = ShortArray(128)
             val downsampledSamplesMax = ShortArray(128)
 
@@ -117,7 +115,7 @@ class Wave(private val file: File) {
 
             for (i in 0 until 128) {
                 var max: Short = 0
-                var min:Short=0
+                var min: Short = 0
                 for (j in i * step until (i + 1) * step) {
                     max = max(max.toInt(), samples[j].toInt()).toShort()
                     min = min(max.toInt(), samples[j].toInt()).toShort()
@@ -144,7 +142,6 @@ class Wave(private val file: File) {
 
         return downsample(shortList.toShortArray())
     }
-
 
 
     companion object {

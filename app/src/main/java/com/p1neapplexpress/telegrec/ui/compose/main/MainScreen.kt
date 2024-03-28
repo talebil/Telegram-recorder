@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.p1neapplexpress.telegrec.R
 import com.p1neapplexpress.telegrec.data.RecordingFormat
-import com.p1neapplexpress.telegrec.ui.compose.recordings.AudioWaveView
 import com.p1neapplexpress.telegrec.ui.vm.MainViewModel
 
 

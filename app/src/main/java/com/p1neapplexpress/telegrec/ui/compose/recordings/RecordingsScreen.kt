@@ -16,12 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.p1neapplexpress.telegrec.R
-import com.p1neapplexpress.telegrec.data.RecordingFormat
-import com.p1neapplexpress.telegrec.ui.vm.MainViewModel
 import com.p1neapplexpress.telegrec.ui.vm.RecordingsViewModel
-import java.io.File
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,9 +33,11 @@ fun RecordingsScreenView(
         Spacer(modifier = Modifier.height(16.dp))
         LazyColumn {
             recordingsState.map {
-                item { RecordingListItem(recording = it) {
-                    recordingsViewModel.playRecording(it)
-                } }
+                item {
+                    RecordingListItem(recording = it) {
+                        recordingsViewModel.playRecording(it)
+                    }
+                }
             }
         }
     }

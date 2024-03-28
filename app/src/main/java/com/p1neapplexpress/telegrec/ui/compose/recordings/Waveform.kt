@@ -32,7 +32,7 @@ fun AudioWaveView(
             val yScale = height / Short.MAX_VALUE.toFloat()
 
             waveformPath.moveTo(0f, height / 2f)
-    
+
             samples.forEachIndexed { index, sample ->
                 val x = index * xStep
                 val y = ((sample * 4) * yScale) + (height / 2f)

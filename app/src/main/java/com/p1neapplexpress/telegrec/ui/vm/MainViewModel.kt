@@ -1,19 +1,13 @@
 package com.p1neapplexpress.telegrec.ui.vm
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.p1neapplexpress.telegrec.audio.Wave
 import com.p1neapplexpress.telegrec.data.RecordingFormat
 import com.p1neapplexpress.telegrec.preferences.AppSettings
 import com.p1neapplexpress.telegrec.preferences.AppSettingsUpdatedListener
-import com.p1neapplexpress.telegrec.util.loge
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import java.io.File
 
 class MainViewModel : ViewModel(), KoinComponent, AppSettingsUpdatedListener {
 

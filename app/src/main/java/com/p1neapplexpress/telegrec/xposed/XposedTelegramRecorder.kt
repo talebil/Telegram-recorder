@@ -1,11 +1,9 @@
 package com.p1neapplexpress.telegrec.xposed
 
-import com.p1neapplexpress.telegrec.BuildConfig
 import com.p1neapplexpress.telegrec.xposed.recorder.OfficialAppRecorder
 import com.p1neapplexpress.telegrec.xposed.recorder.TPlusAppRecorder
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
-import de.robv.android.xposed.XSharedPreferences
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 

@@ -1,12 +1,10 @@
 package com.p1neapplexpress.telegrec.room
 
 import androidx.room.Dao
-import androidx.room.Database
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.RoomDatabase
 import com.p1neapplexpress.telegrec.data.Recording
 import kotlinx.coroutines.flow.Flow
 
@@ -20,5 +18,5 @@ interface RecordingsDAO {
     suspend fun delete(recording: Recording)
 
     @Query("SELECT * FROM recordings")
-    fun getAll() : Flow<List<Recording>>
+    fun getAll(): Flow<List<Recording>>
 }
