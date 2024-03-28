@@ -3,14 +3,14 @@ package com.p1neapplexpress.telegrec.xposed.recorder
 import com.p1neapplexpress.telegrec.audio.AudioCaptureThread
 import com.p1neapplexpress.telegrec.audio.AudioChannel
 import com.p1neapplexpress.telegrec.audio.AudioProcessor
+import com.p1neapplexpress.telegrec.data.Recording
 import com.p1neapplexpress.telegrec.data.RecordingFormat
-import com.p1neapplexpress.telegrec.preferences.AppSettings
 import com.p1neapplexpress.telegrec.util.formatFileName
+import com.p1neapplexpress.telegrec.util.logd
 import com.p1neapplexpress.telegrec.util.loge
 import com.p1neapplexpress.telegrec.util.postDelayed
 import com.p1neapplexpress.telegrec.xposed.AudioCaptureHook
 import com.p1neapplexpress.telegrec.xposed.RecordingSaverHook
-import com.p1neapplexpress.telegrec.xposed.XposedTelegramRecorder.Companion.getXPref
 import com.p1neapplexpress.telegrec.xposed.getResultFileDir
 import com.p1neapplexpress.telegrec.xposed.getTemporaryFile
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -21,7 +21,6 @@ abstract class AbstractRecorder(private val param: XC_LoadPackage.LoadPackagePar
     abstract val packageNames: List<String>
     open var callerID: String? = null
 
-    private var appSettings: AppSettings? = null
     private val audioProcessor = AudioProcessor()
     private val captureHook = AudioCaptureHook(param)
     private val recordingSaverHook = RecordingSaverHook(param)
@@ -31,10 +30,6 @@ abstract class AbstractRecorder(private val param: XC_LoadPackage.LoadPackagePar
 
     fun run() {
         if (packageNames.contains(param.packageName)) {
-            getXPref()?.let {
-                appSettings = AppSettings(it)
-            }
-
             captureHook.hookAudioCapture()
             recordingSaverHook.hookRecordingSaverBinder()
             hook()
@@ -59,15 +54,15 @@ abstract class AbstractRecorder(private val param: XC_LoadPackage.LoadPackagePar
         threads?.map { it.interrupt(); recordingParts.add(it.dst) }
         threads = null
 
-        // Wait a little while wave file header being updated
-        // then merge our recording parts
+        // Wait a little while for the wav file header to be updated
+        // then merge your recording parts.
         postDelayed {
             if (recordingParts.size < 2) {
                 loge("Failure :( not enough parts to merge")
                 return@postDelayed
             }
 
-            val recordingFormat = appSettings?.recordingFormat ?: RecordingFormat.MP3
+            val recordingFormat = recordingSaverHook.getRecordingFormat() ?: RecordingFormat.MP3
             val tempFile = getTemporaryFile(param.packageName, format = recordingFormat).apply { delete() }
             audioProcessor.mergeAndConvert(
                 recordingParts[0],
@@ -83,8 +78,10 @@ abstract class AbstractRecorder(private val param: XC_LoadPackage.LoadPackagePar
     }
 
     private fun processingComplete(result: File, recordingFormat: RecordingFormat) {
+        logd("${recordingSaverHook.getRecordingFormat()}, ${recordingSaverHook.getFileNameMask()}")
         val formatString = ".${recordingFormat.name.lowercase()}"
-        val fileName = formatFileName(appSettings!!.fileNameMask, callerID) + formatString
+        val currentDate = System.currentTimeMillis()
+        val fileName = formatFileName(recordingSaverHook.getFileNameMask() ?: "recording", callerID, date = currentDate) + formatString
         val resultFileDir = getResultFileDir(param.packageName)
         val destFile = File(resultFileDir, fileName)
 
@@ -92,6 +89,12 @@ abstract class AbstractRecorder(private val param: XC_LoadPackage.LoadPackagePar
         result.copyTo(destFile)
         result.delete()
 
-        recordingSaverHook.save(destFile)
+        recordingSaverHook.save(Recording(
+            app = param.packageName,
+            callerID = callerID ?: "null",
+            file = destFile.absolutePath,
+            filename = destFile.name,
+            date = currentDate
+        ))
     }
 }

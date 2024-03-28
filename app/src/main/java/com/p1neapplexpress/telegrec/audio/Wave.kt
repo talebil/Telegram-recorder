@@ -1,8 +1,12 @@
 package com.p1neapplexpress.telegrec.audio
 
+import java.io.DataInputStream
+import java.io.EOFException
 import java.io.File
 import java.io.FileInputStream
 import java.io.RandomAccessFile
+import kotlin.math.max
+import kotlin.math.min
 
 class Wave(private val file: File) {
 
@@ -102,6 +106,45 @@ class Wave(private val file: File) {
         data[42] = (contentSize shr 16 and 0xff).toByte()
         data[43] = (contentSize shr 24 and 0xff).toByte()
     }
+
+    fun waveform(): Pair<ShortArray,ShortArray> {
+
+        fun downsample(samples: ShortArray): Pair<ShortArray,ShortArray> {
+            val downsampledSamplesMin = ShortArray(128)
+            val downsampledSamplesMax = ShortArray(128)
+
+            val step = samples.size / 128
+
+            for (i in 0 until 128) {
+                var max: Short = 0
+                var min:Short=0
+                for (j in i * step until (i + 1) * step) {
+                    max = max(max.toInt(), samples[j].toInt()).toShort()
+                    min = min(max.toInt(), samples[j].toInt()).toShort()
+                }
+                downsampledSamplesMax[i] = max
+                downsampledSamplesMin[i] = min
+            }
+
+            return downsampledSamplesMax to downsampledSamplesMin
+        }
+
+        val shortList = mutableListOf<Short>()
+        val buffer = ByteArray(1024 * 1024 * 64)
+
+        FileInputStream(file).use { inputStream ->
+            var bytesRead: Int
+            while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                for (i in 0 until bytesRead / 2) {
+                    val sample = ((buffer[i * 2 + 1].toInt() and 0xFF) shl 8) or (buffer[i * 2].toInt() and 0xFF)
+                    shortList.add(sample.toShort())
+                }
+            }
+        }
+
+        return downsample(shortList.toShortArray())
+    }
+
 
 
     companion object {

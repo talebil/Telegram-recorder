@@ -1,13 +1,19 @@
 package com.p1neapplexpress.telegrec.ui.vm
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.p1neapplexpress.telegrec.audio.Wave
 import com.p1neapplexpress.telegrec.data.RecordingFormat
 import com.p1neapplexpress.telegrec.preferences.AppSettings
 import com.p1neapplexpress.telegrec.preferences.AppSettingsUpdatedListener
+import com.p1neapplexpress.telegrec.util.loge
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import java.io.File
 
 class MainViewModel : ViewModel(), KoinComponent, AppSettingsUpdatedListener {
 
@@ -25,9 +31,17 @@ class MainViewModel : ViewModel(), KoinComponent, AppSettingsUpdatedListener {
     private val _fileNameMaskState = MutableStateFlow(String())
     val fileNameMaskState = _fileNameMaskState.asStateFlow()
 
+    private val _waveformState = MutableStateFlow(shortArrayOf() to shortArrayOf())
+    val waveformState = _waveformState.asStateFlow()
+
+
     init {
         appSettings.setSettingsUpdatedListener(this)
-        emitInitial()
+
+        _enabledState.value = appSettings.isEnabled
+        _savePathState.value = appSettings.savePath
+        _fileNameMaskState.value = appSettings.fileNameMask
+        _recordingsFormatState.value = appSettings.recordingFormat.name
     }
 
     override fun onCleared() {
@@ -67,10 +81,4 @@ class MainViewModel : ViewModel(), KoinComponent, AppSettingsUpdatedListener {
         appSettings.fileNameMask = mask
     }
 
-    private fun emitInitial() {
-        _enabledState.value = appSettings.isEnabled
-        _savePathState.value = appSettings.savePath
-        _fileNameMaskState.value = appSettings.fileNameMask
-        _recordingsFormatState.value = appSettings.recordingFormat.name
-    }
 }

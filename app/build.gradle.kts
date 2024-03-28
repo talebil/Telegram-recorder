@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
@@ -56,8 +58,10 @@ android {
     }
 }
 
+
 val splash = "1.0.1"
 val koin = "2.2.1"
+val room_version = "2.6.1"
 
 dependencies {
 
@@ -75,6 +79,8 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.0")
     implementation("androidx.wear.compose:compose-material:1.3.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
@@ -97,6 +103,10 @@ dependencies {
     // Mobile FFmpeg
     implementation(files("libs/mobile-ffmpeg.aar"))
 
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    // Room
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    //noinspection KaptUsageInsteadOfKsp
+    kapt("androidx.room:room-compiler:$room_version")
 }

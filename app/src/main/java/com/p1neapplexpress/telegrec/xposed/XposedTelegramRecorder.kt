@@ -24,11 +24,6 @@ class XposedTelegramRecorder : IXposedHookLoadPackage, IXposedHookZygoteInit {
     override fun initZygote(p0: IXposedHookZygoteInit.StartupParam?) {}
 
     companion object {
-        fun getXPref(): XSharedPreferences? {
-            val pref = XSharedPreferences(BuildConfig.APPLICATION_ID, BuildConfig.APPLICATION_ID)
-            return if (pref.file.canRead()) pref else null
-        }
-
         private val CLIENTS = listOf(
             OfficialAppRecorder::class.java,
             TPlusAppRecorder::class.java

@@ -1,7 +1,8 @@
-package com.p1neapplexpress.telegrec.ui.compose
+package com.p1neapplexpress.telegrec.ui.compose.main
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -15,7 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.p1neapplexpress.telegrec.R
 import com.p1neapplexpress.telegrec.data.RecordingFormat
+import com.p1neapplexpress.telegrec.ui.compose.recordings.AudioWaveView
 import com.p1neapplexpress.telegrec.ui.vm.MainViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +31,7 @@ fun MainScreenView(
     val savePathState by mainViewModel.savePathState.collectAsState()
     val fileNameMaskState by mainViewModel.fileNameMaskState.collectAsState()
 
-    Column {
+    Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(title = { Text(text = title) })
         Spacer(modifier = Modifier.height(16.dp))
         SwitchSetting(
@@ -62,3 +65,4 @@ fun MainScreenView(
         )
     }
 }
+

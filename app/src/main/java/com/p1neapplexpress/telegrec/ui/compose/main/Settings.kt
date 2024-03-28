@@ -1,4 +1,4 @@
-package com.p1neapplexpress.telegrec.ui.compose
+package com.p1neapplexpress.telegrec.ui.compose.main
 
 import android.net.Uri
 import android.provider.DocumentsContract

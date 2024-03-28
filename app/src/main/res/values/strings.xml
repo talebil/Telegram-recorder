@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Telegram Recorder</string>
+    <string name="recordings">Recordings</string>
     <string name="title_activity_launcher">Launcher</string>
     <string name="test">Test</string>
     <string name="enable">Enable</string>
