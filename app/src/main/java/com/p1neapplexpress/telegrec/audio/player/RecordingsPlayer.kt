@@ -6,10 +6,8 @@ import android.os.Handler
 import com.p1neapplexpress.telegrec.data.Recording
 
 class RecordingsPlayer(private val mediaPlayer: MediaPlayer) : OnPreparedListener, MediaPlayer.OnCompletionListener {
-    private var listener: PlaybackStateUpdatedListener? = null
-    private var currentRecording: Recording? = null
-    private val handler = Handler()
-    private val updatePositionRunnable: Runnable = object : Runnable {
+
+    private inner class UpdatePositionRunnable : Runnable {
         override fun run() {
             if (mediaPlayer.isPlaying) {
                 val currentPosition = mediaPlayer.currentPosition
@@ -28,6 +26,11 @@ class RecordingsPlayer(private val mediaPlayer: MediaPlayer) : OnPreparedListene
         }
     }
 
+    private var listener: PlaybackStateUpdatedListener? = null
+    private var currentRecording: Recording? = null
+    private val handler = Handler()
+    private val updatePositionRunnable = UpdatePositionRunnable()
+
     fun setPlaybackStateUpdatedListener(appSettingsUpdatedListener: PlaybackStateUpdatedListener) {
         this.listener = appSettingsUpdatedListener
     }
@@ -38,11 +41,7 @@ class RecordingsPlayer(private val mediaPlayer: MediaPlayer) : OnPreparedListene
 
     fun select(recording: Recording) {
         try {
-            if (recording == currentRecording) {
-                togglePlayPause()
-            } else {
-                play(recording)
-            }
+            if (recording == currentRecording) togglePlayPause() else play(recording)
         } catch (e: Exception) {
             listener?.onError(e)
         }
