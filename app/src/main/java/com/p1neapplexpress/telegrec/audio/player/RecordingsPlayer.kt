@@ -10,16 +10,7 @@ class RecordingsPlayer(private val mediaPlayer: MediaPlayer) : OnPreparedListene
     private inner class UpdatePositionRunnable : Runnable {
         override fun run() {
             if (mediaPlayer.isPlaying) {
-                val currentPosition = mediaPlayer.currentPosition
-                val duration = mediaPlayer.duration
-
-                listener?.onUpdate(
-                    PlaybackState(
-                        recording = currentRecording ?: return,
-                        currentPosition = currentPosition.toLong(),
-                        duration = duration.toLong()
-                    )
-                )
+                updatePlaybackState()
             }
 
             handler.postDelayed(this, 1000)
@@ -30,6 +21,15 @@ class RecordingsPlayer(private val mediaPlayer: MediaPlayer) : OnPreparedListene
     private var currentRecording: Recording? = null
     private val handler = Handler()
     private val updatePositionRunnable = UpdatePositionRunnable()
+
+    override fun onPrepared(p0: MediaPlayer?) {
+        p0?.start()
+        updatePlaybackState()
+    }
+
+    override fun onCompletion(p0: MediaPlayer?) {
+        stop()
+    }
 
     fun setPlaybackStateUpdatedListener(appSettingsUpdatedListener: PlaybackStateUpdatedListener) {
         this.listener = appSettingsUpdatedListener
@@ -45,10 +45,6 @@ class RecordingsPlayer(private val mediaPlayer: MediaPlayer) : OnPreparedListene
         } catch (e: Exception) {
             listener?.onError(e)
         }
-    }
-
-    fun togglePlayPause() {
-        if (mediaPlayer.isPlaying) mediaPlayer.pause() else mediaPlayer.start()
     }
 
     fun play(recording: Recording) {
@@ -73,11 +69,20 @@ class RecordingsPlayer(private val mediaPlayer: MediaPlayer) : OnPreparedListene
         listener?.onUpdate(PlaybackState.EMPTY)
     }
 
-    override fun onPrepared(p0: MediaPlayer?) {
-        p0?.start()
+    private fun togglePlayPause() {
+        if (mediaPlayer.isPlaying) mediaPlayer.pause() else mediaPlayer.start()
     }
 
-    override fun onCompletion(p0: MediaPlayer?) {
-        stop()
+    private fun updatePlaybackState() {
+        val currentPosition = mediaPlayer.currentPosition
+        val duration = mediaPlayer.duration
+
+        listener?.onUpdate(
+            PlaybackState(
+                recording = currentRecording ?: return,
+                currentPosition = currentPosition.toLong(),
+                duration = duration.toLong()
+            )
+        )
     }
 }

@@ -78,7 +78,6 @@ abstract class AbstractRecorder(private val param: XC_LoadPackage.LoadPackagePar
     }
 
     private fun processingComplete(result: File, recordingFormat: RecordingFormat) {
-        logd("${recordingSaverHook.getRecordingFormat()}, ${recordingSaverHook.getFileNameMask()}")
         val formatString = ".${recordingFormat.name.lowercase()}"
         val currentDate = System.currentTimeMillis()
         val fileName = formatFileName(recordingSaverHook.getFileNameMask() ?: "recording", callerID, date = currentDate) + formatString

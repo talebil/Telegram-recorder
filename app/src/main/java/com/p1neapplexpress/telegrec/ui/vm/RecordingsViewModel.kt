@@ -29,27 +29,7 @@ class RecordingsViewModel : ViewModel(), KoinComponent, PlaybackStateUpdatedList
 
     init {
         recordingsPlayer.setPlaybackStateUpdatedListener(this)
-
-        viewModelScope.launch {
-            recordingsRepository.getAllRecordings().collectLatest {
-                _recordingsState.value = it
-            }
-        }
-    }
-
-    fun deleteRecording(recording: Recording) {
-        viewModelScope.launch {
-            recordingsRepository.deleteRecording(recording)
-        }
-    }
-
-    fun playRecording(recording: Recording) {
-        currentRecording = recording
-        recordingsPlayer.select(recording)
-    }
-
-    fun stop() {
-        recordingsPlayer.stop()
+        getAllRecordings()
     }
 
     override fun onUpdate(playbackState: PlaybackState) {
@@ -65,5 +45,24 @@ class RecordingsViewModel : ViewModel(), KoinComponent, PlaybackStateUpdatedList
     override fun onCleared() {
         recordingsPlayer.removePlaybackStateUpdatedListener()
         super.onCleared()
+    }
+
+    fun playRecording(recording: Recording) {
+        currentRecording = recording
+        recordingsPlayer.select(recording)
+    }
+
+    fun stop() {
+        recordingsPlayer.stop()
+    }
+
+    private fun getAllRecordings() = viewModelScope.launch {
+        recordingsRepository.getAllRecordings().collectLatest {
+            _recordingsState.value = it
+        }
+    }
+
+    private fun deleteRecording(recording: Recording) = viewModelScope.launch {
+        recordingsRepository.deleteRecording(recording)
     }
 }
